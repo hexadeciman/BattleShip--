@@ -11,8 +11,9 @@ public class MainClass {
 		SwingUtilities.invokeLater(new Runnable() {
 				public void run() {
 					//Turn off metal's use of bold fonts
-					UIManager.put("swing.boldMetal", Boolean.FALSE);
-					Window w = new Window(); 
+					ConnectWindow c = new ConnectWindow();
+					//UIManager.put("swing.boldMetal", Boolean.FALSE);
+					//
 				}
 		});
 		

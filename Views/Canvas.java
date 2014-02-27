@@ -1,96 +1,99 @@
 package Views;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.util.ArrayList;
-import java.util.Random;
 
-import javax.swing.JComponent;
 import javax.swing.JPanel;
+
+import Elements.ElementContainer;
+import Lib.Tuple;
 
 public class Canvas extends JPanel{
 	
 	private int count;
 	private Point coordinates = new Point(0, 0);
-    private ArrayList<Point> coordinateList = new ArrayList<Point>();
     private int side;
-    
+    public static int sizeSquare;
+    public static int currentCard;
     public Canvas(int n){
+    	Canvas.currentCard=0;
     	side = n;
     	setPreferredSize(new Dimension(1000, 1000));
+    	sizeSquare = 20;
+    	setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+
+    	for(int row = 0; row<n; row++){
+    		for(int col = 0; col<(n/4)*3;col++){
+    			gbc.gridx = row;
+    			gbc.gridy = col;
+    			ElementContainer e = new ElementContainer(row, col, 1, 1, Color.BLACK, true);
+    	    	add(e,gbc);
+    		}
+    	}
     }
-	
-	  private void doDrawing(Graphics g) {
 
-	        Graphics2D g2d = (Graphics2D) g;
+		  private void drawGrid(Graphics g, int size){
+			  Graphics2D g2d = (Graphics2D) g;
+		        int count = side;
+			  g.setColor(Color.black);
+		        for( int i = 0; i < count; i ++)
+		        {
+		          for( int j = 0; j < count-10; j++)
+		          {
+			         Rectangle grid = new Rectangle(i*size, j*size, size, size);
+		        	 g2d.draw(grid);
+		        	             
+		          }
+		        }
 
-	        g2d.setColor(Color.blue);
-	        g2d.drawLine(381, 0, 381, 585);
-
-	       /* 
-	        * vertical line  (top to bottom centered)
-	        g2d.drawLine(385, 0, 385, 550);
-	        * horizontal line  (left to right /2 centered)
-	        g2d.drawLine(0, 275,385 , 275);
-	        */
-	        
-	        
-	    }
-
+		        g2d.setColor(Color.blue);
+		        g2d.drawLine(381, 0, 381, 585);
+		  }
+	  
 	    @Override
 	    public void paintComponent(Graphics g) {
-	        
 	        super.paintComponent(g);
-	        doDrawing(g);
-	        matchRectangle(g, 5, 2);
-	        Graphics2D g2 = (Graphics2D) g;
-
-	        int count = side;
-	        int size = 20;
-	        g2.setColor(Color.black);
-	        for( int i = 0; i < count; i ++)
-	        {
-	          for( int j = 0; j < count-10; j++)
-	          {
-	        	 //Rectangle grid = new Rectangle( 300 + i * size, 20 + j * size, size, size);
-		         Rectangle grid = new Rectangle(i*size, j*size, size, size);
-	        	 g2.draw(grid);
-	        	             
-	          }
-	        }
-	     
-
-	        
-	       } // paintComponent
+	        displayShips(g);
+	        drawGrid(g,sizeSquare);
+	        repaint();
+	    } // paintComponent
 	    
-	    private void matchRectangle(Graphics g, int x, int y){
-	    	int dy = getSize ().height;
-	        int dx = getSize ().width;
-	        //int mid_y = dy/2-y;
-	        //int mid_x = dx/2-x;
-	        
-	        int mid_y=0;// = 20+x;
-	        int mid_x=0;// = 20+y;
-	        
-	        for(int i=0; i<x-1; i++){
-	        	mid_x = (mid_x + 20);
-	        	for(int j=0; j<y-1; j++){
-	        		mid_y = (mid_y + 20);
-	        	}
-	        }
-	        
-	    	g.setColor (Color.red);
-	    	g.fillRect(mid_x, mid_y, 20, 20);
+	    static public Tuple matchRectangle(int x, int y){
+	        int realY=0;
+	        int realX=0;
+	        //System.out.print(x+" "+y);
+	        realX =  (x-1)*sizeSquare;
+	        realY = (y-1)*sizeSquare;
+	        //System.out.println(" -> "+realX+" "+realY);
+
+	        Tuple posReal = new Tuple(realX,realY);
+	        return posReal;
 	    }
 	    
-	   
+		public void displayShips(Graphics g){
+			super.paintComponent(g);
+			Graphics2D g2 = (Graphics2D) g;
+
+			for(ElementContainer s: ContainerGame.ShipList){
+				
+				g2.setColor(s.color);
+				g2.fillRect(s.getRealPosX(),s.getRealPosY(),sizeSquare, sizeSquare);
+			}
+			g2.fillRect(740, 280, 20, 20);
+			
+			
+			
+			//ElementContainer s = new ElementContainer(x,  y, 1, sizeY, Color.red, true);
+			//add(s, 0,0);
+		}
 	    
 	            
 }	

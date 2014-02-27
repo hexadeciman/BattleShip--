@@ -30,7 +30,7 @@ public class Window extends JFrame implements ActionListener,ItemListener{
 		this.setJMenuBar(bar);
 		ContainerGame cont = new ContainerGame(this.getContentPane());
 		this.add(cont);
-		this.setSize(1024, 768);
+		this.setSize(927, 749);
 		this.setVisible(true);		
 
 		//this.pack();
